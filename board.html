@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Facturas Electrónicas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --success-color: #2ecc71;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+        }
+        
+        .sidebar {
+            background-color: var(--secondary-color);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            padding-top: 20px;
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 5px;
+        }
+        
+        .sidebar .nav-link:hover {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: var(--primary-color);
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border: none;
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            font-weight: 600;
+            padding: 15px 20px;
+        }
+        
+        .table-responsive {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .table th {
+            background-color: var(--light-color);
+            border-top: none;
+            font-weight: 600;
+        }
+        
+        .badge-success {
+            background-color: var(--success-color);
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box i {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #6c757d;
+        }
+        
+        .search-box input {
+            padding-left: 35px;
+            border-radius: 20px;
+        }
+        
+        .pagination .page-item.active .page-link {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .pagination .page-link {
+            color: var(--secondary-color);
+        }
+        
+        .total-facturas {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+        
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-1 {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .btn-export {
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="text-center mb-4">
+                    <h4>Factus Dashboard</h4>
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">
+                            <i class="bi bi-house-door me-2"></i>Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="bi bi-file-earmark-text me-2"></i>Facturas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="bi bi-people me-2"></i>Clientes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="bi bi-box-seam me-2"></i>Productos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="bi bi-graph-up me-2"></i>Reportes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="bi bi-gear me-2"></i>Configuración
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Facturas Electrónicas</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group me-2">
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filtros -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Filtros</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="fechaDesde" class="form-label">Fecha desde</label>
+                                <input type="date" class="form-control" id="fechaDesde">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="fechaHasta" class="form-label">Fecha hasta</label>
+                                <input type="date" class="form-control" id="fechaHasta">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="estado" class="form-label">Estado</label>
+                                <select class="form-select" id="estado">
+                                    <option value="">Todos</option>
+                                    <option value="1">Activo</option>
+                                    <option value="0">Inactivo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <div class="search-box">
+                                    <i class="bi bi-search"></i>
+                                    <input type="text" class="form-control" id="busqueda" placeholder="Buscar por número, cliente, referencia...">
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3 d-flex align-items-end">
+                                <button class="btn btn-primary w-100" id="btnFiltrar">
+                                    <i class="bi bi-funnel me-1"></i>Filtrar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resumen -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-2">Total Facturas</h6>
+                                        <h4 id="totalFacturas">0</h4>
+                                    </div>
+                                    <div class="bg-primary bg-opacity-10 p-3 rounded">
+                                        <i class="bi bi-receipt text-primary" style="font-size: 1.5rem;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-2">Total Valor</h6>
+                                        <h4 id="totalValor">$0</h4>
+                                    </div>
+                                    <div class="bg-success bg-opacity-10 p-3 rounded">
+                                        <i class="bi bi-currency-dollar text-success" style="font-size: 1.5rem;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-2">Promedio por Factura</h6>
+                                        <h4 id="promedioFactura">$0</h4>
+                                    </div>
+                                    <div class="bg-info bg-opacity-10 p-3 rounded">
+                                        <i class="bi bi-graph-up text-info" style="font-size: 1.5rem;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla de Facturas -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Listado de Facturas</span>
+                        <span class="total-facturas" id="mostrandoFacturas">Mostrando 0 de 0</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="loading-spinner" id="loadingSpinner">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
+                            <p class="mt-2">Cargando facturas...</p>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="tablaFacturas">
+                                <thead>
+                                    <tr>
+                                        <th>Número</th>
+                                        <th>Fecha</th>
+                                        <th>Cliente</th>
+                                        <th>Identificación</th>
+                                        <th>Referencia</th>
+                                        <th>Total</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="facturasBody">
+                                    <!-- Contenedor de Facturas -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Paginación -->
+                        <nav aria-label="Page navigation" class="mt-4">
+                            <ul class="pagination justify-content-center" id="pagination">
+                                <!-- Contenedor de las Paginas -->
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal para detalles de factura -->
+    <div class="modal fade" id="detalleFacturaModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalles de Factura</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="detalleFacturaBody">
+                    <!-- Los detalles se cargarán aquí -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Token de autorización
+        const authToken = localStorage.getItem('authToken');
+        const token = `Bearer ${authToken}`;
+        
+        // Variables globales
+        let currentPage = 1;
+        let totalPages = 1;
+        let totalFacturas = 0;
+        let facturasData = [];
+        
+        // Función para formatear fecha
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const [date, time] = dateString.split(' ');
+            const [day, month, year] = date.split('-');
+            const [hour, minute, second] = time.split(':');
+            const period = hour >= 12 ? 'PM' : 'AM';
+            const formattedHour = hour % 12 || 12;
+            
+            return `${day}/${month}/${year} ${formattedHour}:${minute} ${period}`;
+        }
+        
+        // Función para formatear moneda
+        function formatCurrency(amount) {
+            if (!amount) return '$0';
+            return '$' + parseFloat(amount).toLocaleString('es-CO');
+        }
+        
+        // Función para cargar facturas desde la API
+        async function loadFacturas(page = 1, filters = {}) {
+            try {
+                document.getElementById('loadingSpinner').style.display = 'block';
+                document.getElementById('facturasBody').innerHTML = '';
+                
+                const myHeaders = new Headers();
+                myHeaders.append("Accept", "application/json");
+                myHeaders.append("Authorization", token);
+                
+                let url = `https://api-sandbox.factus.com.co/v1/bills?page=${page}`;
+                
+                // Aplicar filtros si existen
+                if (filters.fechaDesde) {
+                    url += `&start_date=${filters.fechaDesde}`;
+                }
+                if (filters.fechaHasta) {
+                    url += `&end_date=${filters.fechaHasta}`;
+                }
+                if (filters.estado !== undefined && filters.estado !== '') {
+                    url += `&status=${filters.estado}`;
+                }
+                if (filters.busqueda) {
+                    url += `&search=${encodeURIComponent(filters.busqueda)}`;
+                }
+                
+                const requestOptions = {
+                    method: "GET",
+                    headers: myHeaders,
+                    redirect: "follow"
+                };
+                
+                const response = await fetch(url, requestOptions);
+                const data = await response.json();
+                
+                if (data.status === "OK") {
+                    facturasData = data.data.data;
+                    totalFacturas = data.data.pagination.total;
+                    totalPages = data.data.pagination.last_page;
+                    currentPage = data.data.pagination.current_page;
+                    
+                    updateUI(data);
+                } else {
+                    throw new Error(data.message || "Error al cargar las facturas");
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al cargar las facturas: ' + error.message);
+            } finally {
+                document.getElementById('loadingSpinner').style.display = 'none';
+            }
+        }
+        
+        // Función para actualizar la interfaz con los datos
+        function updateUI(data) {
+            const facturasBody = document.getElementById('facturasBody');
+            facturasBody.innerHTML = '';
+            
+            // Actualizar resumen
+            document.getElementById('totalFacturas').textContent = totalFacturas.toLocaleString();
+            
+            // Calcular total valor y promedio
+            let totalValor = 0;
+            data.data.data.forEach(factura => {
+                totalValor += parseFloat(factura.total);
+            });
+            const promedio = totalValor / data.data.data.length;
+            
+            document.getElementById('totalValor').textContent = formatCurrency(totalValor);
+            document.getElementById('promedioFactura').textContent = isNaN(promedio) ? '$0' : formatCurrency(promedio);
+            
+            // Actualizar texto "Mostrando X de Y"
+            const from = data.data.pagination.from;
+            const to = data.data.pagination.to;
+            document.getElementById('mostrandoFacturas').textContent = `Mostrando ${from} a ${to} de ${totalFacturas}`;
+            
+            // Llenar tabla
+            data.data.data.forEach(factura => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${factura.number}</td>
+                    <td>${formatDate(factura.created_at)}</td>
+                    <td>${factura.names || 'Consumidor final'}</td>
+                    <td>${factura.identification || 'N/A'}</td>
+                    <td>${factura.reference_code || 'N/A'}</td>
+                    <td>${formatCurrency(factura.total)}</td>
+                    <td>
+                        <span class="status-badge status-${factura.status}">
+                            ${factura.status === 1 ? 'Activa' : 'Inactiva'}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary ver-detalle" data-id="${factura.id}">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-download"></i>
+                        </button>
+                    </td>
+                `;
+                facturasBody.appendChild(row);
+            });
+            
+            // Configurar eventos de los botones de detalle
+            document.querySelectorAll('.ver-detalle').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const facturaId = btn.getAttribute('data-id');
+                    showDetalleFactura(facturaId);
+                });
+            });
+            
+            // Actualizar paginación
+            updatePagination(data.data.pagination);
+        }
+        
+        // Función para mostrar detalles de una factura
+        async function showDetalleFactura(facturaId) {
+            try {
+                const factura = facturasData.find(f => f.id == facturaId);
+                if (!factura) return;
+                
+                const detalleFacturaBody = document.getElementById('detalleFacturaBody');
+                detalleFacturaBody.innerHTML = `
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6>Información de la Factura</h6>
+                            <p><strong>Número:</strong> ${factura.number}</p>
+                            <p><strong>Fecha:</strong> ${formatDate(factura.created_at)}</p>
+                            <p><strong>Referencia:</strong> ${factura.reference_code || 'N/A'}</p>
+                            <p><strong>Total:</strong> ${formatCurrency(factura.total)}</p>
+                            <p><strong>Estado:</strong> 
+                                <span class="status-badge status-${factura.status}">
+                                    ${factura.status === 1 ? 'Activa' : 'Inactiva'}
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Información del Cliente</h6>
+                            <p><strong>Nombre:</strong> ${factura.names || 'Consumidor final'}</p>
+                            <p><strong>Identificación:</strong> ${factura.identification || 'N/A'}</p>
+                            <p><strong>Email:</strong> ${factura.email || 'N/A'}</p>
+                            <p><strong>Forma de pago:</strong> ${factura.payment_form?.name || 'N/A'}</p>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Descripción</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio Unitario</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="4" class="text-center">Información detallada de productos no disponible en esta vista</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                
+                // Mostrar modal
+                const modal = new bootstrap.Modal(document.getElementById('detalleFacturaModal'));
+                modal.show();
+                
+            } catch (error) {
+                console.error('Error al cargar detalles:', error);
+                alert('Error al cargar los detalles de la factura');
+            }
+        }
+        
+        // Función para actualizar la paginación
+        function updatePagination(pagination) {
+            const paginationElement = document.getElementById('pagination');
+            paginationElement.innerHTML = '';
+            
+            // Botón Anterior
+            const prevLi = document.createElement('li');
+            prevLi.className = `page-item ${pagination.current_page === 1 ? 'disabled' : ''}`;
+            prevLi.innerHTML = `
+                <a class="page-link" href="#" aria-label="Anterior" data-page="${pagination.current_page - 1}">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            `;
+            paginationElement.appendChild(prevLi);
+            
+            // Números de página
+            for (let i = 1; i <= Math.min(pagination.last_page, 5); i++) {
+                const li = document.createElement('li');
+                li.className = `page-item ${i === pagination.current_page ? 'active' : ''}`;
+                li.innerHTML = `<a class="page-link" href="#" data-page="${i}">${i}</a>`;
+                paginationElement.appendChild(li);
+            }
+            
+            // Puntos suspensivos si hay más páginas
+            if (pagination.last_page > 5) {
+                const li = document.createElement('li');
+                li.className = 'page-item disabled';
+                li.innerHTML = `<a class="page-link" href="#">...</a>`;
+                paginationElement.appendChild(li);
+                
+                // Última página
+                const lastLi = document.createElement('li');
+                lastLi.className = `page-item ${pagination.current_page === pagination.last_page ? 'active' : ''}`;
+                lastLi.innerHTML = `<a class="page-link" href="#" data-page="${pagination.last_page}">${pagination.last_page}</a>`;
+                paginationElement.appendChild(lastLi);
+            }
+            
+            // Botón Siguiente
+            const nextLi = document.createElement('li');
+            nextLi.className = `page-item ${pagination.current_page === pagination.last_page ? 'disabled' : ''}`;
+            nextLi.innerHTML = `
+                <a class="page-link" href="#" aria-label="Siguiente" data-page="${pagination.current_page + 1}">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            `;
+            paginationElement.appendChild(nextLi);
+            
+            // Configurar eventos de paginación
+            document.querySelectorAll('.page-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = link.getAttribute('data-page');
+                    if (page) {
+                        applyFilters(parseInt(page));
+                    }
+                });
+            });
+        }
+        
+        // Función para aplicar filtros
+        function applyFilters(page = 1) {
+            const filters = {
+                fechaDesde: document.getElementById('fechaDesde').value,
+                fechaHasta: document.getElementById('fechaHasta').value,
+                estado: document.getElementById('estado').value,
+                busqueda: document.getElementById('busqueda').value
+            };
+            
+            loadFacturas(page, filters);
+        }
+        
+        // Eventos
+        document.getElementById('btnFiltrar').addEventListener('click', () => {
+            applyFilters();
+        });
+        
+        document.getElementById('busqueda').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                applyFilters();
+            }
+        });
+        
+        // Cargar datos iniciales
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFacturas();
+            
+            // Establecer fechas por defecto (últimos 30 días)
+            const today = new Date();
+            const lastMonth = new Date();
+            lastMonth.setDate(lastMonth.getDate() - 30);
+            
+            document.getElementById('fechaDesde').valueAsDate = lastMonth;
+            document.getElementById('fechaHasta').valueAsDate = today;
+        });
+    </script>
+</body>
+</html>
