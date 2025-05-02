@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tributos de Productos - Sistema de Facturación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Encabezado -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800">
+                <i class="fas fa-receipt mr-2 text-blue-600"></i>
+                Tributos de Productos
+            </h1>
+            <div class="flex flex-col md:flex-row w-full md:w-auto gap-3">
+                <div class="relative w-full md:w-64">
+                    <input type="text" id="search-input" placeholder="Buscar tributo..." 
+                           class="pl-10 pr-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="bg-white rounded-lg shadow p-4 mb-6">
+            <div class="flex flex-wrap items-center gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Ordenar por</label>
+                    <select id="sort-by" class="border rounded-md px-3 py-2 w-48 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="name-asc">Nombre (A-Z)</option>
+                        <option value="name-desc">Nombre (Z-A)</option>
+                        <option value="code-asc">Código (Asc)</option>
+                        <option value="code-desc">Código (Desc)</option>
+                    </select>
+                </div>
+                <button id="apply-filters" class="mt-6 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md flex items-center">
+                    <i class="fas fa-filter mr-2"></i>
+                    Aplicar
+                </button>
+            </div>
+        </div>
+
+        <!-- Tarjeta de resultados -->
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <!-- Encabezado de la tabla -->
+            <div class="grid grid-cols-12 bg-gray-100 border-b p-4 font-semibold text-gray-700">
+                <div class="col-span-1">ID</div>
+                <div class="col-span-1">Código</div>
+                <div class="col-span-3">Nombre</div>
+                <div class="col-span-6">Descripción</div>
+            </div>
+
+            <!-- Cuerpo de la tabla -->
+            <div id="tributos-container">
+                <!-- Los tributos se cargarán aquí dinámicamente -->
+            </div>
+
+            <!-- Paginación -->
+            <div class="flex flex-col md:flex-row justify-between items-center p-4 border-t gap-4">
+                <div class="text-sm text-gray-600">
+                    Mostrando <span id="start-item" class="font-medium">1</span> a <span id="end-item" class="font-medium">10</span> de <span id="total-items" class="font-medium">17</span> resultados
+                </div>
+                <div class="flex space-x-2">
+                    <button id="prev-page" class="px-3 py-1 border rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 disabled:opacity-50">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div id="page-buttons" class="flex space-x-2">
+                        <!-- Los botones de página se generarán aquí -->
+                    </div>
+                    <button id="next-page" class="px-3 py-1 border rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 disabled:opacity-50">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos de los tributos
+        const tributosData = {
+            "status": "OK",
+            "message": "Solicitud exitosa",
+            "data": [
+                {
+                    "id": 1,
+                    "code": "01",
+                    "name": "IVA",
+                    "description": "Impuesto sobre la Ventas"
+                },
+                {
+                    "id": 2,
+                    "code": "02",
+                    "name": "IC",
+                    "description": "Impuesto al Consumo Departamental Nominal"
+                },
+                {
+                    "id": 3,
+                    "code": "03",
+                    "name": "ICA",
+                    "description": "Impuesto de Industria, Comercio y Aviso"
+                },
+                {
+                    "id": 4,
+                    "code": "04",
+                    "name": "INC",
+                    "description": "Impuesto Nacional al Consumo"
+                },
+                {
+                    "id": 5,
+                    "code": "05",
+                    "name": "ReteIVA",
+                    "description": "Retención sobre el IVA"
+                },
+                {
+                    "id": 6,
+                    "code": "06",
+                    "name": "ReteRenta",
+                    "description": "Retención sobre renta"
+                },
+                {
+                    "id": 7,
+                    "code": "07",
+                    "name": "ReteICA",
+                    "description": "Retención sobre el ICA"
+                },
+                {
+                    "id": 8,
+                    "code": "08",
+                    "name": "IC Porcentual",
+                    "description": "Impuesto al Consumo Departamental Porcentual"
+                },
+                {
+                    "id": 9,
+                    "code": "20",
+                    "name": "FtoHorticultura",
+                    "description": "Cuota de Fomento Hortifrutícula"
+                },
+                {
+                    "id": 10,
+                    "code": "21",
+                    "name": "Timbre",
+                    "description": "Impuesto de Timbre"
+                },
+                {
+                    "id": 11,
+                    "code": "22",
+                    "name": "INC Bolsas",
+                    "description": "Impuesto Nacional al Consumo de Bolsa Plástica"
+                },
+                {
+                    "id": 12,
+                    "code": "23",
+                    "name": "INCarbono",
+                    "description": "Impuesto Nacional del Carbono"
+                },
+                {
+                    "id": 13,
+                    "code": "24",
+                    "name": "INCarbono",
+                    "description": "Impuesto Nacional del Carbono"
+                },
+                {
+                    "id": 14,
+                    "code": "24",
+                    "name": "INCombustibles",
+                    "description": "Impuesto Nacional a los Combustibles"
+                },
+                {
+                    "id": 15,
+                    "code": "25",
+                    "name": "Sobretasa Combustibles",
+                    "description": "Sobretasa a los combustibles"
+                },
+                {
+                    "id": 16,
+                    "code": "26",
+                    "name": "Sordicom",
+                    "description": "Contribución minoristas (Combustibles)"
+                },
+                {
+                    "id": 17,
+                    "code": "30",
+                    "name": "IC Datos",
+                    "description": "Impuesto al Consumo de Datos"
+                }
+            ]
+        };
+
+        // Variables de estado
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let filteredTributos = [...tributosData.data];
+        let sortedTributos = [...tributosData.data];
+
+        // Elementos del DOM
+        const tributosContainer = document.getElementById('tributos-container');
+        const searchInput = document.getElementById('search-input');
+        const sortBy = document.getElementById('sort-by');
+        const applyFilters = document.getElementById('apply-filters');
+        const prevPage = document.getElementById('prev-page');
+        const nextPage = document.getElementById('next-page');
+        const pageButtons = document.getElementById('page-buttons');
+        const startItem = document.getElementById('start-item');
+        const endItem = document.getElementById('end-item');
+        const totalItems = document.getElementById('total-items');
+
+        // Funciones de utilidad
+        function filterTributos() {
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            filteredTributos = tributosData.data.filter(tributo => {
+                return tributo.name.toLowerCase().includes(searchTerm) || 
+                       tributo.code.toLowerCase().includes(searchTerm) ||
+                       tributo.description.toLowerCase().includes(searchTerm);
+            });
+            
+            // Aplicar ordenamiento después de filtrar
+            sortTributos();
+            
+            // Resetear a la primera página
+            currentPage = 1;
+            updatePagination();
+            renderTributos();
+        }
+
+        function sortTributos() {
+            const sortValue = sortBy.value;
+            
+            sortedTributos = [...filteredTributos].sort((a, b) => {
+                switch(sortValue) {
+                    case 'name-asc':
+                        return a.name.localeCompare(b.name);
+                    case 'name-desc':
+                        return b.name.localeCompare(a.name);
+                    case 'code-asc':
+                        return a.code.localeCompare(b.code);
+                    case 'code-desc':
+                        return b.code.localeCompare(a.code);
+                    default:
+                        return 0;
+                }
+            });
+        }
+
+        function updatePagination() {
+            const totalPages = Math.ceil(sortedTributos.length / itemsPerPage);
+            totalItems.textContent = sortedTributos.length;
+            
+            // Actualizar rangos
+            const start = (currentPage - 1) * itemsPerPage + 1;
+            const end = Math.min(currentPage * itemsPerPage, sortedTributos.length);
+            startItem.textContent = start;
+            endItem.textContent = end;
+            
+            // Habilitar/deshabilitar botones de navegación
+            prevPage.disabled = currentPage === 1;
+            nextPage.disabled = currentPage === totalPages;
+            
+            // Generar botones de página
+            pageButtons.innerHTML = '';
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            if (startPage > 1) {
+                const btn = document.createElement('button');
+                btn.className = 'px-3 py-1 border rounded-md hover:bg-gray-100';
+                btn.textContent = '1';
+                btn.addEventListener('click', () => goToPage(1));
+                pageButtons.appendChild(btn);
+                
+                if (startPage > 2) {
+                    const dots = document.createElement('span');
+                    dots.className = 'px-3 py-1';
+                    dots.textContent = '...';
+                    pageButtons.appendChild(dots);
+                }
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const btn = document.createElement('button');
+                btn.className = `px-3 py-1 border rounded-md ${i === currentPage ? 'bg-blue-600 text-white' : 'hover:bg-gray-100'}`;
+                btn.textContent = i;
+                btn.addEventListener('click', () => goToPage(i));
+                pageButtons.appendChild(btn);
+            }
+            
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    const dots = document.createElement('span');
+                    dots.className = 'px-3 py-1';
+                    dots.textContent = '...';
+                    pageButtons.appendChild(dots);
+                }
+                
+                const btn = document.createElement('button');
+                btn.className = 'px-3 py-1 border rounded-md hover:bg-gray-100';
+                btn.textContent = totalPages;
+                btn.addEventListener('click', () => goToPage(totalPages));
+                pageButtons.appendChild(btn);
+            }
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            renderTributos();
+            updatePagination();
+        }
+
+        function renderTributos() {
+            tributosContainer.innerHTML = '';
+            
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, sortedTributos.length);
+            const tributosToShow = sortedTributos.slice(startIndex, endIndex);
+            
+            if (tributosToShow.length === 0) {
+                const emptyRow = document.createElement('div');
+                emptyRow.className = 'p-8 text-center text-gray-500 col-span-12';
+                emptyRow.textContent = 'No se encontraron tributos que coincidan con los criterios de búsqueda';
+                tributosContainer.appendChild(emptyRow);
+                return;
+            }
+            
+            tributosToShow.forEach(tributo => {
+                const row = document.createElement('div');
+                row.className = 'grid grid-cols-12 border-b p-4 hover:bg-gray-50 items-center';
+                
+                row.innerHTML = `
+                    <div class="col-span-1 text-gray-600">${tributo.id}</div>
+                    <div class="col-span-1 font-medium">${tributo.code}</div>
+                    <div class="col-span-3 font-medium text-blue-600">${tributo.name}</div>
+                    <div class="col-span-6 text-gray-600">${tributo.description}</div>
+                    
+                `;
+                
+                tributosContainer.appendChild(row);
+            });
+        }
+
+        // Event listeners
+        searchInput.addEventListener('input', filterTributos);
+        sortBy.addEventListener('change', () => {
+            sortTributos();
+            currentPage = 1;
+            updatePagination();
+            renderTributos();
+        });
+        applyFilters.addEventListener('click', filterTributos);
+        prevPage.addEventListener('click', () => goToPage(currentPage - 1));
+        nextPage.addEventListener('click', () => goToPage(currentPage + 1));
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            filterTributos(); // Esto también llama a sortTributos, updatePagination y renderTributos
+        });
+    </script>
+</body>
+</html>
