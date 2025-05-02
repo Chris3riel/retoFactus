@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <title>Inicio</title>
   </head>
 
@@ -66,77 +68,22 @@
             proceso de facturación en la Dian.
           </p>
           <form id="generarFactura">
-            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg transition duration-300 ease-in-out">
+            <button
+              type="submit"
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg transition duration-300 ease-in-out"
+            >
               Generar Factura
               <span id="spinner" class="ml-2 hidden">
                 <i class="fas fa-spinner fa-spin"></i>
               </span>
             </button>
           </form>
-          
         </div>
       </div>
     </main>
 
-    <script>
-      document.getElementById('generarFactura').addEventListener('submit', function(e) {
-          e.preventDefault();
-          
-          // Obtener valores del formulario
-          const username = "sandbox@factus.com.co";
-          const password = "sandbox2024%";
-          
-          document.getElementById('spinner').classList.remove('hidden');
-
-          // Configurar headers
-          const myHeaders = new Headers();
-          myHeaders.append("Accept", "application/json");
-          
-          // Configurar formdata
-          const formdata = new FormData();
-          formdata.append("grant_type", "password");
-          formdata.append("client_id", "9de7fa7f-1e0e-4384-a879-4d3f314eb2d8"); // Aquí debes agregar tu client_id
-          formdata.append("client_secret", "0Vt17b8wsK8an6UV0FNqsTw4BXjP2P2q0Ek8RzrL"); // Aquí debes agregar tu client_secret
-          formdata.append("username", username);
-          formdata.append("password", password);
-          
-          // Opciones de la petición
-          const requestOptions = {
-              method: "POST",
-              headers: myHeaders,
-              body: formdata,
-              redirect: "follow"
-          };
-          
-          // Realizar petición
-          fetch("https://api-sandbox.factus.com.co/oauth/token", requestOptions)
-              .then((response) => {
-                  if (!response.ok) {
-                      throw new Error('Credenciales incorrectas');
-                  }
-                  return response.json();
-              })
-              .then((result) => {
-                  // Guardar token en localStorage
-                  localStorage.setItem('authToken', result.access_token);
-                  
-                  // Redirigir al dashboard o página principal
-                  window.location.href = 'board.html';
-              })
-              .catch((error) => {
-                  console.error(error);
-                  
-                  // Mostrar mensaje de error
-                  document.getElementById('errorText').textContent = 'Usuario o contraseña incorrectos. Por favor, intente nuevamente.';
-                  document.getElementById('errorMessage').classList.remove('hidden');
-                  
-                  // Restaurar botón
-                  document.getElementById('spinner').classList.add('hidden');
-                  document.getElementById('buttonText').textContent = 'Iniciar Sesión';
-                  document.getElementById('loginButton').disabled = false;
-              });
-      });
-  </script>
+    <script src="./src/scripts/index-v2.js">
+    </script>
   </body>
 
   <footer class="bg-gray-100 py-8 text-center text-sm text-gray-500">

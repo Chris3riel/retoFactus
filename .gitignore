@@ -1,1 +1,6 @@
 dash.html
+/node_modules
+package.json
+package-lock.json
+obf.js
+js/
