@@ -4,196 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Formulario de Facturación</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        line-height: 1.6;
-        margin: 0;
-        padding: 20px;
-        color: #333;
-      }
-      .response-section {
-        margin-bottom: 20px;
-        padding: 15px;
-        background: white;
-        border-radius: 5px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      }
-
-      .response-section h4 {
-        margin-top: 0;
-        color: #2c3e50;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 8px;
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-      }
-
-      th,
-      td {
-        padding: 8px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-      }
-
-      th {
-        background-color: #f2f2f2;
-      }
-
-      tr:hover {
-        background-color: #f5f5f5;
-      }
-      .container {
-        max-width: 1000px;
-        margin: 0 auto;
-        padding: 20px;
-        background: #f9f9f9;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      }
-      h1 {
-        text-align: center;
-        color: #2c3e50;
-      }
-      .form-section {
-        margin-bottom: 20px;
-        padding: 15px;
-        background: white;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      }
-      .form-section h2 {
-        margin-top: 0;
-        color: #3498db;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 10px;
-      }
-      .form-group {
-        margin-bottom: 15px;
-      }
-      label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-      }
-      input,
-      select,
-      textarea {
-        width: 100%;
-        padding: 8px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        box-sizing: border-box;
-      }
-      button {
-        background: #3498db;
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-      }
-      button:hover {
-        background: #2980b9;
-      }
-      .items-container {
-        margin-top: 20px;
-      }
-      .item {
-        border: 1px solid #ddd;
-        padding: 15px;
-        margin-bottom: 15px;
-        border-radius: 5px;
-        background: #f5f5f5;
-      }
-      .item-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-      }
-      .remove-item {
-        background: #e74c3c;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 3px;
-        cursor: pointer;
-      }
-      .add-item {
-        background: #2ecc71;
-        margin-top: 10px;
-      }
-      .taxes-container {
-        margin-top: 10px;
-        padding: 10px;
-        background: #fff;
-        border-radius: 5px;
-        border: 1px solid #ddd;
-      }
-      .add-tax {
-        background: #27ae60;
-        padding: 5px 10px;
-        font-size: 14px;
-        margin-top: 5px;
-      }
-      .response {
-        margin-top: 20px;
-        padding: 15px;
-        border-radius: 5px;
-        background: #f8f9fa;
-        border: 1px solid #ddd;
-        display: none;
-      }
-      .error {
-        background: #fdecea;
-        border-color: #f44336;
-      }
-      .success {
-        background: #e8f5e9;
-        border-color: #4caf50;
-      }
-      .response-section {
-        margin-bottom: 20px;
-        padding: 15px;
-        background: white;
-        border-radius: 5px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      }
-
-      .response-section h4 {
-        margin-top: 0;
-        color: #2c3e50;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 8px;
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-      }
-
-      th,
-      td {
-        padding: 8px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-      }
-
-      th {
-        background-color: #f2f2f2;
-      }
-
-      tr:hover {
-        background-color: #f5f5f5;
-      }
-    </style>
+    <link rel="stylesheet" href="./src/css/facturacion.css" />
   </head>
   <body>
     <div class="container">
@@ -203,11 +14,17 @@
         <h2>Información General</h2>
         <div class="form-group">
           <label for="numbering_range_id">Rango de numeración:</label>
-          <input type="number" id="numbering_range_id" value="8" required />
+          <input
+            type="number"
+            id="numbering_range_id"
+            value="8"
+            disabled
+            required
+          />
         </div>
         <div class="form-group">
           <label for="reference_code">Código de referencia:</label>
-          <input type="text" id="reference_code" value="I3" required />
+          <input type="text" id="reference_code" value="I3" disabled required />
         </div>
         <div class="form-group">
           <label for="observation">Observación:</label>
@@ -215,20 +32,31 @@
         </div>
         <div class="form-group">
           <label for="payment_form">Forma de pago:</label>
-          <input type="text" id="payment_form" value="1" required />
+          <!--<input type="text" id="payment_form" value="1" required />-->
+          <select name="formas-pago" id="payment_form">
+            <option value="1">Pago de Contado</option>
+            <option value="2">Pago a Crédito</option>
+          </select>
         </div>
         <div class="form-group">
           <label for="payment_due_date">Fecha de vencimiento:</label>
           <input
             type="date"
             id="payment_due_date"
-            value="2024-12-30"
+            value="2025-05-06"
             required
           />
         </div>
         <div class="form-group">
           <label for="payment_method_code">Código de método de pago:</label>
-          <input type="text" id="payment_method_code" value="10" required />
+          <!--<input type="text" id="payment_method_code" value="10" required />-->
+          <select name="payment_method_code" id="payment_method_code" required>
+            <option value="10">Efectivo</option>
+            <option value="20">Cheque</option>
+            <option value="47">Transferencia</option>
+            <option value="49">Tarjeta de Débito</option>
+            <option value="48">Tarjeta de Crédito</option>
+          </select>
         </div>
       </div>
 
@@ -236,7 +64,7 @@
         <h2>Período de Facturación</h2>
         <div class="form-group">
           <label for="start_date">Fecha de inicio:</label>
-          <input type="date" id="start_date" value="2025-04-25" required />
+          <input type="date" id="start_date" value="2025-05-01" required />
         </div>
         <div class="form-group">
           <label for="start_time">Hora de inicio:</label>
@@ -244,7 +72,7 @@
         </div>
         <div class="form-group">
           <label for="end_date">Fecha de fin:</label>
-          <input type="date" id="end_date" value="2025-04-26" required />
+          <input type="date" id="end_date" value="2025-05-06" required />
         </div>
         <div class="form-group">
           <label for="end_time">Hora de fin:</label>
@@ -256,11 +84,11 @@
         <h2>Datos del Cliente</h2>
         <div class="form-group">
           <label for="identification">Identificación:</label>
-          <input type="text" id="identification" value="11" required />
+          <input type="text" id="identification" value="123456789" required />
         </div>
         <div class="form-group">
           <label for="dv">DV:</label>
-          <input type="text" id="dv" value="3" required />
+          <input type="text" id="dv" value=""/>
         </div>
         <div class="form-group">
           <label for="company">Empresa:</label>
@@ -272,7 +100,7 @@
         </div>
         <div class="form-group">
           <label for="names">Nombres:</label>
-          <input type="text" id="names" value="Chris Uriel" required />
+          <input type="text" id="names" value="Alan Turing" required />
         </div>
         <div class="form-group">
           <label for="address">Dirección:</label>
@@ -283,7 +111,7 @@
           <input
             type="email"
             id="email"
-            value="chrisurpineda@gmail.com"
+            value="alanturing@enigmasas.com"
             required
           />
         </div>
@@ -293,26 +121,157 @@
         </div>
         <div class="form-group">
           <label for="legal_organization_id">ID Organización legal:</label>
-          <input type="text" id="legal_organization_id" value="2" required />
+          <!--<input type="text" id="legal_organization_id" value="2" required />-->
+          <select
+            name="legal_organization_id"
+            id="legal_organization_id"
+            required
+          >
+            <option value="2">Persona Natural</option>
+            <option value="1">Persona Jurídica</option>
+          </select>
         </div>
         <div class="form-group">
           <label for="tribute_id">ID Tributo:</label>
-          <input type="text" id="tribute_id" value="21" required />
+          <!--<input type="text" id="tribute_id" value="21" required />-->
+          <select name="tribute_id" id="tribute_id" required>
+            <option value="21">NO APLICA*</option>
+            <option value="18">IVA</option>
+          </select>
         </div>
         <div class="form-group">
           <label for="identification_document_id"
             >ID Documento de identificación:</label
           >
-          <input
+          <!--<input
             type="text"
             id="identification_document_id"
             value="3"
             required
-          />
+          />-->
+          <select
+            name="identification_document_id"
+            id="identification_document_id"
+            required
+          >
+            <option value="11">NUIP*</option>
+            <option value="2">Tarjeta de Identidad</option>
+            <option value="3">Cedula de Ciudadania</option>
+            <option value="6">NIT</option>
+            <option value="1">Registro Civil</option>
+            <option value="7">Pasaporte</option>
+          </select>
         </div>
         <div class="form-group">
           <label for="municipality_id">ID Municipio:</label>
-          <input type="text" id="municipality_id" value="980" required />
+          <!--<input type="text" id="municipality_id" value="980" required />-->
+          <select id="municipality_id">
+            <option value="">Selecciona una opción</option>
+            <optgroup label="Amazonas">
+              <option value="1">El Encanto</option>
+              <option value="2">La Chorrera</option>
+              <option value="3">La Pedrera</option>
+              <option value="4">La Victoria</option>
+              <option value="5">Leticia</option>
+              <option value="6">Miriti - Parana</option>
+              <option value="7">Puerto Alegria</option>
+              <option value="8">Puerto Arica</option>
+              <option value="9">Puerto Nariño</option>
+              <option value="10">Puerto Santander</option>
+              <option value="11">Tarapaca</option>
+            </optgroup>
+            <optgroup label="Antioquia">
+              <option value="12">Abejorral</option>
+              <option value="13">Abriaqui</option>
+              <option value="14">Alejandria</option>
+              <option value="15">Amaga</option>
+              <option value="16">Amalfi</option>
+              <option value="17">Andes</option>
+              <option value="18">Angelopolis</option>
+              <option value="19">Angostura</option>
+              <option value="20">Anori</option>
+              <option value="21">Anza</option>
+              <option value="22">Apartado</option>
+              <option value="23">Arboletes</option>
+              <option value="24">Argelia</option>
+              <option value="25">Armenia</option>
+              <option value="26">Barbosa</option>
+              <option value="27">Bello</option>
+              <option value="28">Belmira</option>
+              <option value="29">Betania</option>
+              <option value="30">Betulia</option>
+              <option value="31">Briceño</option>
+              <option value="32">Buritica</option>
+              <option value="33">Cañasgordas</option>
+              <option value="34">Caceres</option>
+              <option value="35">Caicedo</option>
+              <option value="36">Caldas</option>
+              <option value="37">Campamento</option>
+              <option value="38">Caracoli</option>
+              <option value="39">Caramanta</option>
+              <option value="40">Carepa</option>
+              <option value="41">Carolina</option>
+              <option value="42">Caucasia</option>
+              <option value="43">Chigorodo</option>
+              <option value="44">Cisneros</option>
+              <option value="45">Ciudad Bolivar</option>
+              <option value="46">Cocorna</option>
+              <option value="47">Concepcion</option>
+              <option value="48">Concordia</option>
+              <option value="49">Copacabana</option>
+              <option value="50">Dabeiba</option>
+              <option value="51">Don Matias</option>
+              <option value="52">Ebejico</option>
+              <option value="53">El Bagre</option>
+              <option value="54">El Carmen De Viboral</option>
+              <option value="55">El Santuario</option>
+              <option value="56">Entrerrios</option>
+              <option value="57">Envigado</option>
+              <option value="58">Fredonia</option>
+              <option value="59">Frontino</option>
+              <option value="60">Giraldo</option>
+              <option value="61">Girardota</option>
+              <option value="62">Gomez Plata</option>
+              <option value="63">Granada</option>
+              <option value="64">Guadalupe</option>
+              <option value="65">Guarne</option>
+              <option value="66">Guatape</option>
+              <option value="67">Heliconia</option>
+              <option value="68">Hispania</option>
+              <option value="69">Itagüi</option>
+              <option value="70">Ituango</option>
+              <option value="71">Jardin</option>
+              <option value="72">Jerico</option>
+              <option value="73">La Ceja</option>
+              <option value="74">La Estrella</option>
+              <option value="75">La Pintada</option>
+              <option value="76">La Union</option>
+              <option value="77">Liborina</option>
+              <option value="78">Maceo</option>
+              <option value="79">Marinilla</option>
+              <option value="80">Medellin</option>
+              <option value="81">Montebello</option>
+              <option value="82">Murindo</option>
+              <option value="83">Mutata</option>
+              <option value="84">Nariño</option>
+              <option value="85">Nechi</option>
+              <option value="86">Necocli</option>
+              <option value="87">Olaya</option>
+              <option value="88">Peñol</option>
+              <option value="89">Peque</option>
+              <option value="90">Pueblorrico</option>
+              <option value="91">Puerto Berrio</option>
+              <option value="92">Puerto Nare</option>
+              <option value="93">Puerto Triunfo</option>
+              <option value="94">Remedios</option>
+              <option value="95">Retiro</option>
+              <option value="96">Rionegro</option>
+              <option value="97">Sabanalarga</option>
+              <option value="98">Sabaneta</option>
+              <option value="99">Salgar</option>
+              <option value="100">San Andres De Cuerquia</option>
+            </optgroup>
+          </select>
         </div>
       </div>
 
@@ -333,570 +292,7 @@
       <div class="response" id="response"></div>
     </div>
 
-    <script>
-      // Token de autorización
-      const authToken = localStorage.getItem("authToken");
-      const token = `Bearer ${authToken}`;
-
-      // Función para agregar un nuevo item
-      function addItem(itemData = null) {
-        const itemsContainer = document.getElementById("items-container");
-        const itemId = Date.now();
-
-        const itemDiv = document.createElement("div");
-        itemDiv.className = "item";
-        itemDiv.id = `item-${itemId}`;
-
-        const itemContent = `
-                <div class="item-header">
-                    <h3>Producto/Servicio</h3>
-                    <button type="button" class="remove-item" onclick="removeItem('${itemId}')">Eliminar</button>
-                </div>
-                <div class="form-group">
-                    <label for="code_reference-${itemId}">Código de referencia:</label>
-                    <input type="text" id="code_reference-${itemId}" value="${
-          itemData ? itemData.code_reference : ""
-        }" required>
-                </div>
-                <div class="form-group">
-                    <label for="name-${itemId}">Nombre:</label>
-                    <input type="text" id="name-${itemId}" value="${
-          itemData ? itemData.name : ""
-        }" required>
-                </div>
-                <div class="form-group">
-                    <label for="quantity-${itemId}">Cantidad:</label>
-                    <input type="number" id="quantity-${itemId}" value="${
-          itemData ? itemData.quantity : "1"
-        }" required>
-                </div>
-                <div class="form-group">
-                    <label for="discount_rate-${itemId}">Tasa de descuento (%):</label>
-                    <input type="number" id="discount_rate-${itemId}" value="${
-          itemData ? itemData.discount_rate : "0"
-        }" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label for="price-${itemId}">Precio:</label>
-                    <input type="number" id="price-${itemId}" value="${
-          itemData ? itemData.price : "0"
-        }" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label for="tax_rate-${itemId}">Tasa de impuesto (%):</label>
-                    <input type="number" id="tax_rate-${itemId}" value="${
-          itemData ? itemData.tax_rate : "0"
-        }" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label for="unit_measure_id-${itemId}">ID Unidad de medida:</label>
-                    <input type="number" id="unit_measure_id-${itemId}" value="${
-          itemData ? itemData.unit_measure_id : "70"
-        }" required>
-                </div>
-                <div class="form-group">
-                    <label for="standard_code_id-${itemId}">ID Código estándar:</label>
-                    <input type="number" id="standard_code_id-${itemId}" value="${
-          itemData ? itemData.standard_code_id : "1"
-        }" required>
-                </div>
-                <div class="form-group">
-                    <label for="is_excluded-${itemId}">Excluido:</label>
-                    <select id="is_excluded-${itemId}">
-                        <option value="0" ${
-                          itemData && itemData.is_excluded == 0
-                            ? "selected"
-                            : ""
-                        }>No</option>
-                        <option value="1" ${
-                          itemData && itemData.is_excluded == 1
-                            ? "selected"
-                            : ""
-                        }>Sí</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="tribute_id-${itemId}">ID Tributo:</label>
-                    <input type="number" id="tribute_id-${itemId}" value="${
-          itemData ? itemData.tribute_id : "1"
-        }" required>
-                </div>
-                
-                <div class="taxes-container" id="taxes-container-${itemId}">
-                    <h4>Retenciones</h4>
-                    <div id="withholding-taxes-${itemId}">
-                        <!-- Las retenciones se agregarán dinámicamente aquí -->
-                    </div>
-                    <button type="button" class="add-tax" onclick="addWithholdingTax('${itemId}')">Agregar Retención</button>
-                </div>
-            `;
-
-        itemDiv.innerHTML = itemContent;
-        itemsContainer.appendChild(itemDiv);
-
-        // Si hay datos de retenciones, las agregamos
-        if (
-          itemData &&
-          itemData.withholding_taxes &&
-          itemData.withholding_taxes.length > 0
-        ) {
-          itemData.withholding_taxes.forEach((tax) => {
-            addWithholdingTax(itemId, tax);
-          });
-        }
-      }
-
-      // Función para agregar una retención
-      function addWithholdingTax(itemId, taxData = null) {
-        const taxesContainer = document.getElementById(
-          `withholding-taxes-${itemId}`
-        );
-        const taxId = Date.now();
-
-        const taxDiv = document.createElement("div");
-        taxDiv.className = "form-group withholding-tax";
-        taxDiv.id = `tax-${itemId}-${taxId}`;
-
-        taxDiv.innerHTML = `
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <div style="flex: 1;">
-                        <label for="tax_code-${itemId}-${taxId}">Código:</label>
-                        <input type="text" id="tax_code-${itemId}-${taxId}" value="${
-          taxData ? taxData.code : ""
-        }" required>
-                    </div>
-                    <div style="flex: 1;">
-                        <label for="tax_rate-${itemId}-${taxId}">Tasa (%):</label>
-                        <input type="number" id="tax_rate-${itemId}-${taxId}" value="${
-          taxData ? taxData.withholding_tax_rate : ""
-        }" step="0.01" required>
-                    </div>
-                    <button type="button" class="remove-item" style="align-self: flex-end;" onclick="removeWithholdingTax('${itemId}', '${taxId}')">Eliminar</button>
-                </div>
-            `;
-
-        taxesContainer.appendChild(taxDiv);
-      }
-
-      // Función para eliminar una retención
-      function removeWithholdingTax(itemId, taxId) {
-        const taxElement = document.getElementById(`tax-${itemId}-${taxId}`);
-        if (taxElement) {
-          taxElement.remove();
-        }
-      }
-
-      // Función para eliminar un item
-      function removeItem(itemId) {
-        const itemElement = document.getElementById(`item-${itemId}`);
-        if (itemElement) {
-          itemElement.remove();
-        }
-      }
-
-      // Función para recolectar todos los datos del formulario
-      function collectFormData() {
-        // Datos generales
-        const numbering_range_id =
-          document.getElementById("numbering_range_id").value;
-        const reference_code = document.getElementById("reference_code").value;
-        const observation = document.getElementById("observation").value;
-        const payment_form = document.getElementById("payment_form").value;
-        const payment_due_date =
-          document.getElementById("payment_due_date").value;
-        const payment_method_code = document.getElementById(
-          "payment_method_code"
-        ).value;
-
-        // Período de facturación
-        const start_date = document.getElementById("start_date").value;
-        const start_time = document.getElementById("start_time").value;
-        const end_date = document.getElementById("end_date").value;
-        const end_time = document.getElementById("end_time").value;
-
-        // Datos del cliente
-        const identification = document.getElementById("identification").value;
-        const dv = document.getElementById("dv").value;
-        const company = document.getElementById("company").value;
-        const trade_name = document.getElementById("trade_name").value;
-        const names = document.getElementById("names").value;
-        const address = document.getElementById("address").value;
-        const email = document.getElementById("email").value;
-        const phone = document.getElementById("phone").value;
-        const legal_organization_id = document.getElementById(
-          "legal_organization_id"
-        ).value;
-        const tribute_id = document.getElementById("tribute_id").value;
-        const identification_document_id = document.getElementById(
-          "identification_document_id"
-        ).value;
-        const municipality_id =
-          document.getElementById("municipality_id").value;
-
-        // Recolectar items
-        const items = [];
-        const itemElements = document.querySelectorAll(".item");
-
-        itemElements.forEach((itemElement) => {
-          const itemId = itemElement.id.split("-")[1];
-
-          const code_reference = document.getElementById(
-            `code_reference-${itemId}`
-          ).value;
-          const name = document.getElementById(`name-${itemId}`).value;
-          const quantity = document.getElementById(`quantity-${itemId}`).value;
-          const discount_rate = document.getElementById(
-            `discount_rate-${itemId}`
-          ).value;
-          const price = document.getElementById(`price-${itemId}`).value;
-          const tax_rate = document.getElementById(`tax_rate-${itemId}`).value;
-          const unit_measure_id = document.getElementById(
-            `unit_measure_id-${itemId}`
-          ).value;
-          const standard_code_id = document.getElementById(
-            `standard_code_id-${itemId}`
-          ).value;
-          const is_excluded = document.getElementById(
-            `is_excluded-${itemId}`
-          ).value;
-          const tribute_id_item = document.getElementById(
-            `tribute_id-${itemId}`
-          ).value;
-
-          // Recolectar retenciones
-          const withholding_taxes = [];
-          const taxElements = document.querySelectorAll(
-            `#withholding-taxes-${itemId} .withholding-tax`
-          );
-
-          taxElements.forEach((taxElement) => {
-            const taxId = taxElement.id.split("-")[2];
-
-            const code = document.getElementById(
-              `tax_code-${itemId}-${taxId}`
-            ).value;
-            const withholding_tax_rate = document.getElementById(
-              `tax_rate-${itemId}-${taxId}`
-            ).value;
-
-            if (code && withholding_tax_rate) {
-              withholding_taxes.push({
-                code,
-                withholding_tax_rate,
-              });
-            }
-          });
-
-          items.push({
-            code_reference,
-            name,
-            quantity: parseFloat(quantity),
-            discount_rate: parseFloat(discount_rate),
-            price: parseFloat(price),
-            tax_rate,
-            unit_measure_id: parseInt(unit_measure_id),
-            standard_code_id: parseInt(standard_code_id),
-            is_excluded: parseInt(is_excluded),
-            tribute_id: parseInt(tribute_id_item),
-            withholding_taxes,
-          });
-        });
-
-        // Construir el objeto final
-        const data = {
-          numbering_range_id: parseInt(numbering_range_id),
-          reference_code,
-          observation,
-          payment_form,
-          payment_due_date,
-          payment_method_code,
-          billing_period: {
-            start_date,
-            start_time,
-            end_date,
-            end_time,
-          },
-          customer: {
-            identification,
-            dv,
-            company,
-            trade_name,
-            names,
-            address,
-            email,
-            phone,
-            legal_organization_id,
-            tribute_id,
-            identification_document_id,
-            municipality_id,
-          },
-          items,
-        };
-
-        return data;
-      }
-
-      // Función para enviar los datos
-      // Función para enviar los datos
-      function submitForm() {
-        const data = collectFormData();
-        const responseElement = document.getElementById("response");
-
-        console.log("Datos a enviar:", data);
-
-        const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Authorization", token);
-
-        const requestOptions = {
-          method: "POST",
-          headers: myHeaders,
-          body: JSON.stringify(data),
-          redirect: "follow",
-        };
-
-        fetch(
-          "https://api-sandbox.factus.com.co/v1/bills/validate",
-          requestOptions
-        )
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-          })
-          .then((result) => {
-            console.log(result);
-            responseElement.style.display = "block";
-            responseElement.className = "response success";
-
-            // Construir la respuesta estructurada
-            let responseHTML = `
-                    <h3>Documento validado con éxito</h3>
-                    <div class="response-section">
-                        <h4>Estado:</h4>
-                        <p>${result.status || "N/A"}</p>
-                        <h4>Mensaje:</h4>
-                        <p>${result.message || "N/A"}</p>
-                    </div>
-                    
-                    <div class="response-section">
-                        <h4>Información de la Empresa:</h4>
-                        <p><strong>Nombre:</strong> ${
-                          result.data?.company?.name || "N/A"
-                        }</p>
-                        <p><strong>NIT:</strong> ${
-                          result.data?.company?.nit || "N/A"
-                        }-${result.data?.company?.dv || "N/A"}</p>
-                        <p><strong>Dirección:</strong> ${
-                          result.data?.company?.direction || "N/A"
-                        }</p>
-                        <p><strong>Municipio:</strong> ${
-                          result.data?.company?.municipality || "N/A"
-                        }</p>
-                        <p><strong>Teléfono:</strong> ${
-                          result.data?.company?.phone || "N/A"
-                        }</p>
-                        <p><strong>Email:</strong> ${
-                          result.data?.company?.email || "N/A"
-                        }</p>
-                        <img src="${
-                          result.data?.company?.url_logo || ""
-                        }" alt="Logo empresa" style="max-width: 200px;">
-                    </div>
-                    
-                    <div class="response-section">
-                        <h4>Información del Cliente:</h4>
-                        <p><strong>Nombre:</strong> ${
-                          result.data?.customer?.names || "N/A"
-                        }</p>
-                        <p><strong>Identificación:</strong> ${
-                          result.data?.customer?.identification || "N/A"
-                        }</p>
-                        <p><strong>Dirección:</strong> ${
-                          result.data?.customer?.address || "N/A"
-                        }</p>
-                        <p><strong>Teléfono:</strong> ${
-                          result.data?.customer?.phone || "N/A"
-                        }</p>
-                        <p><strong>Email:</strong> ${
-                          result.data?.customer?.email || "N/A"
-                        }</p>
-                        <p><strong>Municipio:</strong> ${
-                          result.data?.customer?.municipality?.name || "N/A"
-                        }</p>
-                    </div>
-                    
-                    <div class="response-section">
-                        <h4>Información de la Factura:</h4>
-                        <p><strong>Número:</strong> ${
-                          result.data?.bill?.number || "N/A"
-                        }</p>
-                        <p><strong>Código de referencia:</strong> ${
-                          result.data?.bill?.reference_code || "N/A"
-                        }</p>
-                        <p><strong>Fecha:</strong> ${
-                          result.data?.bill?.created_at || "N/A"
-                        }</p>
-                        <p><strong>Forma de pago:</strong> ${
-                          result.data?.bill?.payment_form?.name || "N/A"
-                        }</p>
-                        <p><strong>Método de pago:</strong> ${
-                          result.data?.bill?.payment_method?.name || "N/A"
-                        }</p>
-                        <p><strong>Total:</strong> $${(
-                          result.data?.bill?.total || 0
-                        ).toLocaleString()}</p>
-                        <p><strong>IVA:</strong> $${(
-                          result.data?.bill?.tax_amount || 0
-                        ).toLocaleString()}</p>
-                        <p><strong>Valor bruto:</strong> $${(
-                          result.data?.bill?.gross_value || 0
-                        ).toLocaleString()}</p>
-                        <img src="${
-                          result.data?.bill?.qr_image || ""
-                        }" alt="QR Factura" style="max-width: 150px;">
-                        <p><a href="${
-                          result.data?.bill?.public_url || "#"
-                        }" target="_blank">Ver factura en línea</a></p>
-                    </div>
-                    
-                    <div class="response-section">
-                        <h4>Productos/Servicios:</h4>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Código</th>
-                                    <th>Descripción</th>
-                                    <th>Cantidad</th>
-                                    <th>Precio</th>
-                                    <th>Descuento</th>
-                                    <th>IVA</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                `;
-
-            // Agregar filas para cada item
-            result.data?.items?.forEach((item) => {
-              responseHTML += `
-                        <tr>
-                            <td>${item.code_reference || "N/A"}</td>
-                            <td>${item.name || "N/A"}</td>
-                            <td>${item.quantity || "N/A"}</td>
-                            <td>$${(item.price || 0).toLocaleString()}</td>
-                            <td>${item.discount_rate || "0"}%</td>
-                            <td>${item.tax_rate || "0"}%</td>
-                            <td>$${(item.total || 0).toLocaleString()}</td>
-                        </tr>
-                    `;
-            });
-
-            responseHTML += `
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div class="response-section">
-                        <h4>Retenciones:</h4>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Código</th>
-                                    <th>Nombre</th>
-                                    <th>Valor</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                `;
-
-            // Agregar filas para cada retención
-            result.data?.withholding_taxes?.forEach((tax) => {
-              responseHTML += `
-                        <tr>
-                            <td>${tax.tribute_code || "N/A"}</td>
-                            <td>${tax.name || "N/A"}</td>
-                            <td>$${(tax.value || 0).toLocaleString()}</td>
-                        </tr>
-                    `;
-            });
-
-            responseHTML += `
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-
-            responseElement.innerHTML = responseHTML;
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            responseElement.style.display = "block";
-            responseElement.className = "response error";
-            responseElement.innerHTML = `<h3>Error:</h3><p>${error.message}</p>`;
-          });
-      }
-
-      // Event listeners
-      document.addEventListener("DOMContentLoaded", function () {
-        // Agregar los items de ejemplo al cargar la página
-        const exampleItems = [
-          {
-            code_reference: "12345",
-            name: "producto de prueba",
-            quantity: 1,
-            discount_rate: 20,
-            price: 50000,
-            tax_rate: "19.00",
-            unit_measure_id: 70,
-            standard_code_id: 1,
-            is_excluded: 0,
-            tribute_id: 1,
-            withholding_taxes: [
-              {
-                code: "06",
-                withholding_tax_rate: "7.00",
-              },
-              {
-                code: "05",
-                withholding_tax_rate: "15.00",
-              },
-            ],
-          },
-          {
-            code_reference: "54321",
-            name: "producto de prueba 2",
-            quantity: 1,
-            discount_rate: 0,
-            price: 50000,
-            tax_rate: "5.00",
-            unit_measure_id: 70,
-            standard_code_id: 1,
-            is_excluded: 0,
-            tribute_id: 1,
-            withholding_taxes: [],
-          },
-        ];
-
-        exampleItems.forEach((item) => {
-          addItem(item);
-        });
-
-        // Configurar botón para agregar items
-        document
-          .getElementById("add-item")
-          .addEventListener("click", function () {
-            addItem();
-          });
-
-        // Configurar botón de enviar
-        document
-          .getElementById("submit-form")
-          .addEventListener("click", function () {
-            submitForm();
-          });
-      });
+    <script src="./src/scripts/facturacion-v2.js">
     </script>
   </body>
 </html>
