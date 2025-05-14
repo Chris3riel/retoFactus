@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Factura No Válida | Factus</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="mb-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="bg-blue-600 text-white p-3 rounded-lg mr-4">
+                        <i class="fas fa-file-invoice text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">Eliminar Factura No Válida</h1>
+                        <p class="text-gray-600">Sistema de gestión de facturas electrónicas</p>
+                    </div>
+                </div>
+                <div class="bg-white p-3 rounded-lg shadow-sm">
+                    <span class="text-sm text-gray-600">API: {{url_api}}</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="bg-white rounded-xl shadow-md overflow-hidden">
+            <div class="p-6">
+                <div class="mb-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-2">Ingrese los datos de la factura</h2>
+                    <p class="text-gray-600">Introduzca el código de referencia de la factura que desea eliminar.</p>
+                </div>
+
+                <form id="deleteForm" class="space-y-6">
+                    <div>
+                        <label for="reference_code" class="block text-sm font-medium text-gray-700 mb-1">Código de Referencia</label>
+                        <input type="text" id="reference_code" name="reference_code" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                               placeholder="Ej: FAC-2023-0001" required>
+                        <p class="mt-1 text-sm text-gray-500">Este es el identificador único de la factura.</p>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input id="confirmation" name="confirmation" type="checkbox" 
+                                   class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="confirmation" class="ml-2 block text-sm text-gray-700">
+                                Confirmo que deseo eliminar esta factura
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-4">
+                        <button type="button" id="resetBtn" 
+                                class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Limpiar
+                        </button>
+                        <button type="submit" 
+                                class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
+                                id="submitBtn" disabled>
+                            <i class="fas fa-trash-alt mr-2"></i> Eliminar Factura
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Result Section -->
+                <div id="resultSection" class="mt-8 hidden">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Resultado de la operación</h3>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <pre id="apiResponse" class="text-sm text-gray-800 overflow-x-auto"></pre>
+                    </div>
+                    <div id="successAlert" class="mt-4 hidden">
+                        <div class="bg-green-50 border-l-4 border-green-400 p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-check-circle text-green-400"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-green-700">
+                                        La factura fue eliminada exitosamente.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="errorAlert" class="mt-4 hidden">
+                        <div class="bg-red-50 border-l-4 border-red-400 p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-exclamation-circle text-red-400"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-red-700" id="errorMessage">
+                                        Ocurrió un error al intentar eliminar la factura.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="mt-8 text-center text-sm text-gray-500">
+            <p>© 2023 Factus. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('deleteForm');
+            const referenceCodeInput = document.getElementById('reference_code');
+            const confirmationCheckbox = document.getElementById('confirmation');
+            const submitBtn = document.getElementById('submitBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const resultSection = document.getElementById('resultSection');
+            const apiResponse = document.getElementById('apiResponse');
+            const successAlert = document.getElementById('successAlert');
+            const errorAlert = document.getElementById('errorAlert');
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Enable/disable submit button based on form validity
+            function updateSubmitButton() {
+                submitBtn.disabled = !(referenceCodeInput.value.trim() && confirmationCheckbox.checked);
+            }
+
+            referenceCodeInput.addEventListener('input', updateSubmitButton);
+            confirmationCheckbox.addEventListener('change', updateSubmitButton);
+
+            // Reset form
+            resetBtn.addEventListener('click', function() {
+                form.reset();
+                resultSection.classList.add('hidden');
+                successAlert.classList.add('hidden');
+                errorAlert.classList.add('hidden');
+                updateSubmitButton();
+            });
+
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const referenceCode = referenceCodeInput.value.trim();
+                
+                // Show loading state
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Procesando...';
+                
+                // Prepare request
+                const raw = "";
+                const requestOptions = {
+                    method: 'DELETE',
+                    body: raw,
+                    redirect: 'follow'
+                };
+
+                // Make API call
+                fetch(`https://api-sandbox.factus.com.co/v1/bills/destroy/reference/${encodeURIComponent(referenceCode)}`, requestOptions)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(result => {
+                        // Show success
+                        apiResponse.textContent = JSON.stringify(result, null, 2);
+                        resultSection.classList.remove('hidden');
+                        successAlert.classList.remove('hidden');
+                        errorAlert.classList.add('hidden');
+                    })
+                    .catch(error => {
+                        // Show error
+                        console.error('Error:', error);
+                        apiResponse.textContent = error.toString();
+                        resultSection.classList.remove('hidden');
+                        successAlert.classList.add('hidden');
+                        errorAlert.classList.remove('hidden');
+                        errorMessage.textContent = error.message || 'Ocurrió un error al intentar eliminar la factura.';
+                    })
+                    .finally(() => {
+                        // Reset button state
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<i class="fas fa-trash-alt mr-2"></i> Eliminar Factura';
+                    });
+            });
+
+            // Initialize button state
+            updateSubmitButton();
+        });
+    </script>
+</body>
+</html>

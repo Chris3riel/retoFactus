@@ -461,6 +461,7 @@
         const numbering_range_id =
           document.getElementById("numbering_range_id").value;
         const reference_code = document.getElementById("reference_code").value;
+        localStorage.setItem("ultimoReferenceCode", reference_code);
         const observation = document.getElementById("observation").value;
         const payment_form = document.getElementById("payment_form").value;
         const payment_due_date =
